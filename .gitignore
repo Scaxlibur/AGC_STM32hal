@@ -1,8 +1,8 @@
 *
 
 !.gitignore
-!ADS1256/
-!Core/
+!ADS1256/*
+!Core/*
 !AGC_STM32hal.ioc
 !CmakeLists.txt
 !README.md
