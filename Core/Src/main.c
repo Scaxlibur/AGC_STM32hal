@@ -119,9 +119,7 @@ int main(void)
 			Volts[i] = Adc*0.000000598;	
 			
 				//i为1时输出通道0的数据
-        printf("channe%d=",i);
-        Print_Float(Volts[i]);
-        printf("V\n");
+        printf("channe%d=%fV\n", i, Volts[i]);
 		}  
     printf("\n");
 		//HAL_Delay(500);
