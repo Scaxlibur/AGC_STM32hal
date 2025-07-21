@@ -19,7 +19,6 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "dac.h"
 #include "spi.h"
 #include "tim.h"
 #include "usart.h"
@@ -114,6 +113,7 @@ uint8_t ADS1256_DRATE_2_5SPS  =  0x03;
 #define CS_0()				HAL_GPIO_WritePin(CS_GPIO_Port, CS_Pin,GPIO_PIN_RESET);
 #define CS_1()				HAL_GPIO_WritePin(CS_GPIO_Port, CS_Pin,GPIO_PIN_SET);
 #define ADS1256_DRDY  		(DRDY_GPIO_Port->IDR & DRDY_Pin) //DRDY引脚，
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -138,6 +138,10 @@ void ADS1256WREG(uint8_t regaddr,uint8_t databyte)
 	//确保前四位为0101，同时后四位为regaddr的值
 	
 	CS_0();
+  CS_0();
+  CS_0();
+  CS_0();
+  CS_0();
 	while(ADS1256_DRDY);
 	
   HAL_SPI_Transmit(&hspi2,(uint8_t*)&wreg,1,100);
@@ -149,6 +153,10 @@ void ADS1256WREG(uint8_t regaddr,uint8_t databyte)
  
   HAL_SPI_Transmit(&hspi2,(uint8_t*)&databyte,1,100);
 	CS_1();
+  CS_1();
+  CS_1();
+  CS_1();
+  CS_1();
 	wreg = 0x50;
 }
 
@@ -157,9 +165,17 @@ void ADS1256_Init(void)
 	//初始化过程参考手册
   while(ADS1256_DRDY);
 	CS_0();
+  CS_0();
+  CS_0();
+  CS_0();
+  CS_0();
 	HAL_SPI_Transmit(&hspi2,(uint8_t *)&ADS1256_CMD_SELFCAL,1,100);
 	while(ADS1256_DRDY);
 	CS_1();
+  CS_1();
+  CS_1();
+  CS_1();
+  CS_1();
 	//**********************************
 
 	ADS1256WREG(ADS1256_STATUS,0x06);               // 启用自校准和模拟输入缓冲区
@@ -169,10 +185,18 @@ void ADS1256_Init(void)
 	ADS1256WREG(ADS1256_DRATE,ADS1256_DRATE_10SPS);  // 10k采样率
 	ADS1256WREG(ADS1256_IO,IO);               
 	while(ADS1256_DRDY);
-	CS_0();
+		CS_0();
+  CS_0();
+  CS_0();
+  CS_0();
+  CS_0();
 	HAL_SPI_Transmit(&hspi2,(uint8_t *)&ADS1256_CMD_SELFCAL,1,100);
 	while(ADS1256_DRDY);
-	CS_1(); 
+	CS_1();
+  CS_1();
+  CS_1();
+  CS_1();
+  CS_1(); 
 	//**********************************
 }
 
@@ -187,6 +211,10 @@ signed int ADS1256ReadData(uint8_t channel)
 	while(ADS1256_DRDY);//
 	ADS1256WREG(ADS1256_MUX,channel);		//
 	CS_0();
+  CS_0();
+  CS_0();
+  CS_0();
+  CS_0();
 	//读数据前依次写入SYNC、WAKEUP、RDATA
 	HAL_SPI_Transmit(&hspi2,(uint8_t *)&ADS1256_CMD_SYNC,1,100);
 	HAL_SPI_Transmit(&hspi2,(uint8_t *)&ADS1256_CMD_WAKEUP,1,100);	               
@@ -198,7 +226,12 @@ signed int ADS1256ReadData(uint8_t channel)
 	sum |= (data1 <<16);
 	sum |= (data2 <<8);
 	sum |= data3;
-	CS_1();
+		CS_1();
+  CS_1();
+  CS_1();
+  CS_1();
+  CS_1(); 
+
 
 	if (sum>0x7FFFFF)           // if MSB=1, 
 	{
@@ -255,7 +288,6 @@ int main(void)
   MX_SPI2_Init();
   MX_TIM3_Init();
   MX_USART1_UART_Init();
-  MX_DAC_Init();
   /* USER CODE BEGIN 2 */
 	//CS_1();
 	HAL_Delay(50);
@@ -328,10 +360,6 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-
-  /** Enables the Clock Security System
-  */
-  HAL_RCC_EnableCSS();
 }
 
 /* USER CODE BEGIN 4 */

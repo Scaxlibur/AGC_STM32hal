@@ -29,6 +29,11 @@ extern "C" {
 #include "main.h"
 
 /* USER CODE BEGIN Includes */
+	
+#include <stdio.h>
+#include <string.h>
+
+extern uint8_t u_buf[256];
 
 /* USER CODE END Includes */
 

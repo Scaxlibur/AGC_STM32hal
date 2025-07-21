@@ -67,7 +67,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
     # Add user defined libraries
 )
 
-# 浮点数打印支持
+# 浮点运算支持
 target_link_options(${CMAKE_PROJECT_NAME} PRIVATE
     -u _printf_float
 )
