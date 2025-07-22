@@ -96,6 +96,11 @@ int main(void)
   MX_DAC_Init();
   /* USER CODE BEGIN 2 */
 
+	/*
+	初始化设置AD7606参数
+	正负10V对应转换  (10*(float)((short)g_tAD.usBuf[j])/32768)      AD_RANGE_10V()
+	正负5V对应转换   (10*(float)((short)g_tAD.usBuf[j])/32768/2)    AD_RANGE_5V()
+	*/
 	ad7606_init ();
 	AD_RANGE_5V();                                        //设置输入电压最大值
   ad7606_StartRecord();                           		   //采样率为10K，采样率由TIM4决定,采样率应该是被采样信号的2倍以上
@@ -110,8 +115,10 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		HAL_Delay(200);//注意延时不要太久		
-		fft_get_maxvalue();
+		HAL_Delay(200);//注意延时不要太久
+		// printf("%f\n",(10000*(float)((short)g_tAD.usBuf[0])/32768/2));//AD7606的FFT数据处理在tim4中断函数中
+		
+		printf("%f\n",filter_fft());
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

@@ -349,11 +349,13 @@ void fft_get_maxvalue()
 		Virtual_value = Amplitude/1.4142135;                                       //有效值
 		
 		res = ((Virtual_value-8)/43.3)/(4-((Virtual_value-8)/43.3))*2000;
+				
+	    // printf("Fmaxvalue = %f \r\n Amplitude = %f  \r\n  DC_Component = %f  \r\n  Virtual_value = %f  \r\n Res = %f  \r\n  ",Freq,Amplitude,DC_Component,Virtual_value,res);
 		
-		//printf("maxvalue = %f \r\n location = %d  \r\n",maxvalue,Index);
-		
-	  printf("Fmaxvalue = %f \r\n Amplitude = %f  \r\n  DC_Component = %f  \r\n  Virtual_value = %f  \r\n Res = %f  \r\n  ",Freq,Amplitude,DC_Component,Virtual_value,res);
-		
+        // printf("DC_Component = %f  \r\n  ",DC_Component);
+
+        // printf("%f\n",DC_Component);
+
 		
 		fft_complete_flag = 0;                                                     //标志位置0，表示转换完成
 		
@@ -373,12 +375,11 @@ float32_t filter_fft()
 	{
 		fft_get_maxvalue();
 		
-		sum = sum+Amplitude;
+		// sum = sum+Amplitude;
+        sum = sum + DC_Component;
 	}
 	
-	result = sum/4;
-	
-	printf("Amplitude = %f",result);
-	
+	result = sum/Filter_average_num;
+
 	return result;
 }
