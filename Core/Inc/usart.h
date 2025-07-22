@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2024 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -29,24 +29,22 @@ extern "C" {
 #include "main.h"
 
 /* USER CODE BEGIN Includes */
-	
 #include <stdio.h>
 #include <string.h>
-
-extern uint8_t u_buf[256];
-
 /* USER CODE END Includes */
 
 extern UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN Private defines */
+#define printf(...)  HAL_UART_Transmit(&huart1, (uint8_t *)u_buf, sprintf((char*)u_buf, __VA_ARGS__), 0xffff)
+extern uint8_t u_buf[256];
 
 /* USER CODE END Private defines */
 
 void MX_USART1_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-int _write(int fd, char *ptr, int len);
+
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

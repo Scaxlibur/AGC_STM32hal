@@ -7,13 +7,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2024 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2024 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -58,10 +57,24 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define CS_Pin GPIO_PIN_1
-#define CS_GPIO_Port GPIOA
-#define DRDY_Pin GPIO_PIN_5
-#define DRDY_GPIO_Port GPIOC
+#define MISO_Pin GPIO_PIN_0
+#define MISO_GPIO_Port GPIOA
+#define CONVST_Pin GPIO_PIN_1
+#define CONVST_GPIO_Port GPIOA
+#define RANGE_Pin GPIO_PIN_2
+#define RANGE_GPIO_Port GPIOA
+#define OS0_Pin GPIO_PIN_4
+#define OS0_GPIO_Port GPIOC
+#define OS1_Pin GPIO_PIN_5
+#define OS1_GPIO_Port GPIOC
+#define OS2_Pin GPIO_PIN_6
+#define OS2_GPIO_Port GPIOC
+#define RST_Pin GPIO_PIN_10
+#define RST_GPIO_Port GPIOC
+#define RD_Pin GPIO_PIN_11
+#define RD_GPIO_Port GPIOC
+#define CS_Pin GPIO_PIN_12
+#define CS_GPIO_Port GPIOC
 
 /* USER CODE BEGIN Private defines */
 
