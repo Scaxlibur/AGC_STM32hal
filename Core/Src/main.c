@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "dac.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -92,16 +93,16 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM4_Init();
   MX_USART1_UART_Init();
+  MX_DAC_Init();
   /* USER CODE BEGIN 2 */
 
-	/*
-	初始化设置AD7606参数
-	正负10V对应转换  (10*(float)((short)g_tAD.usBuf[j])/32768)      AD_RANGE_10V()
-	正负5V对应转换   (10*(float)((short)g_tAD.usBuf[j])/32768/2)    AD_RANGE_5V()
-	*/
 	ad7606_init ();
 	AD_RANGE_5V();                                        //设置输入电压最大值
-  ad7606_StartRecord();                           		   //采样率为100K，采样率由TIM4决定,采样率应该是被采样信号的2倍以上
+  ad7606_StartRecord();                           		   //采样率为10K，采样率由TIM4决定,采样率应该是被采样信号的2倍以上
+
+    HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, 2048);
+
+	HAL_DAC_Start(&hdac,DAC_CHANNEL_1);
 
   /* USER CODE END 2 */
 
@@ -109,26 +110,8 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		int32_t average_val;
-		average_val = ad7606_get_signal_average_val(1,8);//AIN1迭代8次的值
-    printf("average_val_AIN1 = %ld mv\n",average_val);
-
-		// for(int j=0;j<8;j++)
-		// {
-
-		// i = (10000*(float)((short)g_tAD.usBuf[j])/32768/2);  //g_tAD.usBuf[2]表示获取AIN3的电压值
-
-		// printf("AIN%d =",j+1); 
-    // Print_Float(i);  
-    // printf("mV\r\n");
-
-		// }
-		// printf("\n");
-    
-		HAL_Delay(200);//注意延时不要太久
-		// printf("AIN1 = %f mV\r\n",(10000*(float)((short)g_tAD.usBuf[0])/32768/2));//AD7606的FFT数据处理在tim4中断函数中
-		
-		// fft_get_maxvalue();
+		HAL_Delay(200);//注意延时不要太久		
+		fft_get_maxvalue();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

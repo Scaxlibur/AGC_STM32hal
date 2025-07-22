@@ -240,7 +240,7 @@ void ad7606_IRQSrc(void)
             j = 0;
             if(fft_complete_flag == 0)
             {
-                // memcpy(MidBuffer,InPutBuffer,sizeof(InPutBuffer));  //将输入数组的值复制到中间数组              
+                memcpy(MidBuffer,InPutBuffer,sizeof(InPutBuffer));  //将输入数组的值复制到中间数组              
                 fft_complete_flag = 1;
             }
             else if(fft_complete_flag == 1)
