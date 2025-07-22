@@ -94,10 +94,10 @@ int main(void)
   MX_TIM4_Init();
   MX_USART1_UART_Init();
   MX_DAC_Init();
-  MX_TIM3_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
 
-  HAL_TIM_IC_Start(&htim3, TIM_CHANNEL_1);  // 测周法的输入捕获定时器
+  HAL_TIM_IC_Start(&htim2, TIM_CHANNEL_1);  // 测周法的输入捕获定时器
 
 	ad7606_init ();
 	AD_RANGE_5V();                                        //设置输入电压最大值
@@ -117,7 +117,9 @@ int main(void)
 		printf("%f,",(10000*(float)((short)g_tAD.usBuf[0])/32768/2));//AD7606的FFT数据处理在tim4中断函数中
 
 		// printf("Freq:%dHz\n",1000000 / (HAL_TIM_ReadCapturedValue(&htim3,TIM_CHANNEL_1) + 1)); //预分频出来84-1，即50K
-    printf("%d\n",1000000 / (HAL_TIM_ReadCapturedValue(&htim3,TIM_CHANNEL_1) + 1)); //预分频出来84-1，即50K
+    // printf("%lf\n",(4000000 / (double)(HAL_TIM_ReadCapturedValue(&htim2,TIM_CHANNEL_1) + 1))); // 84MHz分频(21-1)次，标准频率40MHz
+    // printf("%lf\n",(8400000 / (double)(HAL_TIM_ReadCapturedValue(&htim2,TIM_CHANNEL_1) + 1))); // 84MHz分频(10-1)次，标准频率84MHz
+    printf("%lf\n",(16800000 / (double)(HAL_TIM_ReadCapturedValue(&htim2,TIM_CHANNEL_1) + 1))); // 84MHz分频(5-1)次，标准频率168MHz
 
 		// printf("%f\n",filter_fft());
     /* USER CODE END WHILE */
