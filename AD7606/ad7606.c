@@ -195,12 +195,17 @@ void ad7606_IRQSrc(void)
 {
     uint8_t i;
     uint16_t usReadValue;
-        static uint32_t j;
+    static uint32_t j;
 
     /* 
     读取数据
     示波器监视，CS低电平持续时间 35us
     */
+    AD_CS_LOW();
+    AD_CS_LOW();
+    AD_CS_LOW();
+    AD_CS_LOW();
+    AD_CS_LOW();
     AD_CS_LOW();
     for (i = 0; i < CH_NUM; i++)
     {
@@ -213,10 +218,15 @@ void ad7606_IRQSrc(void)
     }
 
     AD_CS_HIGH();
-    
+    AD_CS_HIGH();
+    AD_CS_HIGH();
+    AD_CS_HIGH();
+    AD_CS_HIGH();
+    AD_CS_HIGH();
     //g_tAD.usWrite = 0;
 
     //FFT运算
+    
     ad7606_StartConv();
         if( j < fftSize )
         {
@@ -230,7 +240,7 @@ void ad7606_IRQSrc(void)
             j = 0;
             if(fft_complete_flag == 0)
             {
-                memcpy(MidBuffer,InPutBuffer,sizeof(InPutBuffer));  //将输入数组的值复制到中间数组              
+                // memcpy(MidBuffer,InPutBuffer,sizeof(InPutBuffer));  //将输入数组的值复制到中间数组              
                 fft_complete_flag = 1;
             }
             else if(fft_complete_flag == 1)
@@ -240,6 +250,7 @@ void ad7606_IRQSrc(void)
             else 
                 printf("error");
         }
+     
 }
 
 /**
