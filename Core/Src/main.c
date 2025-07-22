@@ -94,18 +94,16 @@ int main(void)
   MX_TIM4_Init();
   MX_USART1_UART_Init();
   MX_DAC_Init();
+  MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
 
-	/*
-	初始化设置AD7606参数
-	正负10V对应转换  (10*(float)((short)g_tAD.usBuf[j])/32768)      AD_RANGE_10V()
-	正负5V对应转换   (10*(float)((short)g_tAD.usBuf[j])/32768/2)    AD_RANGE_5V()
-	*/
+  HAL_TIM_IC_Start(&htim3, TIM_CHANNEL_1);  // 测周法的输入捕获定时器
+
 	ad7606_init ();
 	AD_RANGE_5V();                                        //设置输入电压最大值
   ad7606_StartRecord();                           		   //采样率为10K，采样率由TIM4决定,采样率应该是被采样信号的2倍以上
 
-    HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, 2048);
+  HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, 2048);
 
 	HAL_DAC_Start(&hdac,DAC_CHANNEL_1);
 
@@ -116,9 +114,12 @@ int main(void)
   while (1)
   {
 		HAL_Delay(200);//注意延时不要太久
-		// printf("%f\n",(10000*(float)((short)g_tAD.usBuf[0])/32768/2));//AD7606的FFT数据处理在tim4中断函数中
-		
-		printf("%f\n",filter_fft());
+		printf("%f,",(10000*(float)((short)g_tAD.usBuf[0])/32768/2));//AD7606的FFT数据处理在tim4中断函数中
+
+		// printf("Freq:%dHz\n",1000000 / (HAL_TIM_ReadCapturedValue(&htim3,TIM_CHANNEL_1) + 1)); //预分频出来84-1，即50K
+    printf("%d\n",1000000 / (HAL_TIM_ReadCapturedValue(&htim3,TIM_CHANNEL_1) + 1)); //预分频出来84-1，即50K
+
+		// printf("%f\n",filter_fft());
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
