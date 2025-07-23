@@ -42,7 +42,7 @@ static int fft_complete_flag;                   //定义转换完成标志
  */
 void ad7606_init(void)
 {
-    ad7606_SetOS(0);    //设置过采样模式
+    ad7606_SetOS(2);    //设置过采样模式
 
     ad7606_Reset();     //复位ad7606
 
