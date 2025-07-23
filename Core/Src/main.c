@@ -27,6 +27,7 @@
 /* USER CODE BEGIN Includes */
 #include "ad7606.h"
 #include "stdio.h"
+#include "AGCcontroller.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -103,10 +104,7 @@ int main(void)
 	AD_RANGE_5V();                                          //设置输入电压最大值
   ad7606_StartRecord();                           		   //采样率为10K，采样率由TIM4决定,采样率应该是被采样信号的2倍以上
 
-  HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, 2048);
-
-	HAL_DAC_Start(&hdac,DAC_CHANNEL_1);
-
+  DACvalueSet_mv(1000);
   /* USER CODE END 2 */
 
   /* Infinite loop */
