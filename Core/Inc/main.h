@@ -77,8 +77,12 @@ void Error_Handler(void);
 #define RD_GPIO_Port GPIOC
 #define CS_Pin GPIO_PIN_12
 #define CS_GPIO_Port GPIOC
-#define LED_GREEN_Pin GPIO_PIN_9
-#define LED_GREEN_GPIO_Port GPIOB
+#define LED_GREEN_Pin GPIO_PIN_3
+#define LED_GREEN_GPIO_Port GPIOD
+#define LED_YELLOW_Pin GPIO_PIN_4
+#define LED_YELLOW_GPIO_Port GPIOD
+#define LED_RED_Pin GPIO_PIN_5
+#define LED_RED_GPIO_Port GPIOD
 
 /* USER CODE BEGIN Private defines */
 

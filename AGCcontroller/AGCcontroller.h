@@ -3,6 +3,7 @@
 
 #include "dac.h"
 #include "main.h"
+#include "gpio.h"
 #include "ad7606.h"
 
 #define DAC_MAX_VALUE (float)4096  // 12位DAC最大值
@@ -20,6 +21,8 @@
 
 extern float targetVoltage;
 extern uint16_t dac_value;
+extern float currentVoltage;
+extern float input_voltage;
 
 typedef enum roughGainControl_t
 {

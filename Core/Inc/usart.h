@@ -39,7 +39,10 @@ extern UART_HandleTypeDef huart1;
 extern uint8_t r_data;
 extern uint8_t u_buf[256];
 #define printf(...)  HAL_UART_Transmit(&huart1, (uint8_t *)u_buf, sprintf((char*)u_buf, __VA_ARGS__), 0xffff)
-
+#define SCREEN_CURRENT_OUTPUT(output)   printf("\xff\xff\xffx0.val=%d\xff\xff\xff", (int)((output)*1000))
+#define SCREEN_TARGET_OUTPUT(target)    printf("\xff\xff\xffx3.val=%d\xff\xff\xff", (int)((target)*100))
+#define SCREEN_INPUT_FREQ(freq)         printf("\xff\xff\xffx1.val=%d\xff\xff\xff", (int)((freq)*1000))
+#define SCREEN_INPUT_VOLTAGE(voltage)   printf("\xff\xff\xffx2.val=%d\xff\xff\xff", (int)((voltage)*1000))
 /* USER CODE END Private defines */
 
 void MX_USART1_UART_Init(void);

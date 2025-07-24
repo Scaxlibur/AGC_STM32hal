@@ -4,6 +4,8 @@ extern DAC_HandleTypeDef hdac;
 float targetVoltage = 1414; // 目标输出幅度，单位mV, 注意这里是有效值
 uint16_t dac_value = 600; // DAC初始默认600mv
 
+float currentVoltage = 0;
+float input_voltage = 0;
 
 /**
  * @brief 设定ADC输出为对应幅度，单位mV
@@ -38,7 +40,7 @@ void AGC_gainControl(float dB)
  */
 void roughGainControl()
 {
-    float input_voltage = INPUT_VOLTAGE; // 获取输入电压
+    input_voltage = INPUT_VOLTAGE; // 获取输入电压
     roughGainControl_t roughControlMode;
     if(input_voltage > (SWITCH_LEVEL + SWITCH_BUFFER))
         roughControlMode = rough_devide4;
@@ -61,8 +63,16 @@ void roughGainControl()
  */
 void AGCmove2target(float target)
 {
-    float currentVoltage = OUTPUT_VOLTAGE;
+    currentVoltage = OUTPUT_VOLTAGE;
     roughGainControl();
+    if(target - currentVoltage < 100 || target - currentVoltage > -100)
+    {
+        HAL_GPIO_WritePin(LED_GREEN_GPIO_Port,LED_GREEN_Pin,GPIO_PIN_SET);
+        HAL_GPIO_WritePin(LED_RED_GPIO_Port,LED_RED_Pin,GPIO_PIN_RESET); 
+    }else{
+        HAL_GPIO_WritePin(LED_GREEN_GPIO_Port,LED_GREEN_Pin,GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(LED_RED_GPIO_Port,LED_RED_Pin,GPIO_PIN_SET);
+    }
     if(currentVoltage < target) {
             dac_value = dac_value + DAC_STEP;
             if(dac_value > DAC_SAFE_MAX_VALUE) dac_value = DAC_SAFE_MAX_VALUE;

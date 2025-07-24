@@ -116,13 +116,18 @@ int main(void)
   {
     //ADC1输入，ADC2输出
 
-		HAL_Delay(2);//注意延时不要太久
 		// printf("%f,",(10000*(float)((short)g_tAD.usBuf[0])/32768/2)); // 通道1
     // printf("%f,",(10000*(float)((short)g_tAD.usBuf[1])/32768/2)); // 通道2
 
     // printf("%lf,",(42000000 / (double)(HAL_TIM_ReadCapturedValue(&htim2,TIM_CHANNEL_1) + 1))); // 84MHz分频(2-1)次，标准频率420MHz
     // printf("%d\n",dac_value);
+
+    SCREEN_CURRENT_OUTPUT(currentVoltage);
+    SCREEN_TARGET_OUTPUT(targetVoltage);
+    SCREEN_INPUT_FREQ((42000000 / (double)(HAL_TIM_ReadCapturedValue(&htim2,TIM_CHANNEL_1) + 1)));
+    SCREEN_INPUT_VOLTAGE(input_voltage);
     AGCmove2target(targetVoltage);
+    HAL_Delay(20);//注意延时不要太久
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -192,16 +197,25 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
           printf("wwwdddsss\n");
           break;
         
-        case 'u':
+        case 'u': //粗调+200
           targetVoltage = targetVoltage + 200;
           printf("new target:%f mv\n", targetVoltage);
           break;
         
-        case 'd':
+        case 'd': //粗调-200
           targetVoltage = targetVoltage - 200;
           printf("new target:%f mv\n", targetVoltage);
           break;
 
+        case 'v': //细调+20
+          targetVoltage = targetVoltage + 20;
+          printf("new target:%f mv\n", targetVoltage);
+          break;
+        
+        case 'e': //细调-20
+          targetVoltage = targetVoltage - 20;
+          printf("new target:%f mv\n", targetVoltage);
+          break;
         default:
           printf("?\n");
           break;
