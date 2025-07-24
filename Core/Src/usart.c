@@ -21,6 +21,7 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
+uint8_t r_data[256];
 uint8_t u_buf[256];
 /* USER CODE END 0 */
 
@@ -51,7 +52,7 @@ void MX_USART1_UART_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN USART1_Init 2 */
-
+  HAL_UART_Receive_IT(&huart1, &r_data, 1);
   /* USER CODE END USART1_Init 2 */
 
 }

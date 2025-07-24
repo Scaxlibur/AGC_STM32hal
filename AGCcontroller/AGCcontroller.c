@@ -1,6 +1,9 @@
 #include "AGCcontroller.h"
 
 extern DAC_HandleTypeDef hdac;
+float targetVoltage = 1414; // 目标输出幅度，单位mV, 注意这里是有效值
+uint16_t dac_value = 600; // DAC初始默认600mv
+
 
 /**
  * @brief 设定ADC输出为对应幅度，单位mV
@@ -27,4 +30,40 @@ void AGC_gainControl(float dB)
 {
     uint16_t dac_value = (uint16_t)((dB + 30.737) / 0.0685);
     DACvalueSet_mv(dac_value);
+}
+
+/**
+ * @brief 前级增益粗调函数 
+ * @note 
+ */
+void roughGainControl()
+{
+    switch (roughControlMode)
+    {
+        default:
+        case rough_devide4:
+            HAL_GPIO_WritePin(switch_GPIO_Port, switch_Pin, GPIO_PIN_RESET); // 选择除以4
+            break;
+        case rough_times5:
+            HAL_GPIO_WritePin(switch_GPIO_Port, switch_Pin, GPIO_PIN_SET); // 选择乘5
+    }
+}
+
+/**
+ * @brief 逼近到目标输出幅度（默认2V）
+ */
+void AGCmove2target(float target)
+{
+    float currentVoltage = INPUT_VOLTAGE;
+    if(currentVoltage < target) {
+            dac_value = dac_value + 5;
+            if(dac_value > DAC_SAFE_MAX_VALUE) dac_value = DAC_SAFE_MAX_VALUE;
+            DACvalueSet_mv(dac_value);
+            HAL_Delay(10);
+    } else if(currentVoltage > target) {
+            dac_value = dac_value - 5;
+            if(dac_value < DAC_SAFE_MIN_VALUE) dac_value = DAC_SAFE_MIN_VALUE;
+            DACvalueSet_mv(dac_value);
+            HAL_Delay(10);
+    }
 }

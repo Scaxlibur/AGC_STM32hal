@@ -117,13 +117,9 @@ int main(void)
 		printf("%f,",(10000*(float)((short)g_tAD.usBuf[0])/32768/2)); // 通道1
     printf("%f,",(10000*(float)((short)g_tAD.usBuf[1])/32768/2)); // 通道2
 
-
-		// printf("Freq:%dHz\n",1000000 / (HAL_TIM_ReadCapturedValue(&htim3,TIM_CHANNEL_1) + 1)); //预分频出来84-1，即50K
-    // printf("%lf\n",(4000000 / (double)(HAL_TIM_ReadCapturedValue(&htim2,TIM_CHANNEL_1) + 1))); // 84MHz分频(21-1)次，标准频率40MHz
-    // printf("%lf\n",(8400000 / (double)(HAL_TIM_ReadCapturedValue(&htim2,TIM_CHANNEL_1) + 1))); // 84MHz分频(10-1)次，标准频率84MHz
-    // printf("%lf\n",(16800000 / (double)(HAL_TIM_ReadCapturedValue(&htim2,TIM_CHANNEL_1) + 1))); // 84MHz分频(5-1)次，标准频率168MHz
-    printf("%lf\n",(42000000 / (double)(HAL_TIM_ReadCapturedValue(&htim2,TIM_CHANNEL_1) + 1))); // 84MHz分频(2-1)次，标准频率420MHz
-
+    printf("%lf,",(42000000 / (double)(HAL_TIM_ReadCapturedValue(&htim2,TIM_CHANNEL_1) + 1))); // 84MHz分频(2-1)次，标准频率420MHz
+    printf("%d\n",dac_value);
+    AGCmove2target(targetVoltage);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -183,6 +179,32 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef  *htim)
     {
         ad7606_IRQSrc();
     }
+}
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
+    if (huart == (&huart1)){
+      switch (r_data[1])
+      {
+        case 's':
+          printf("wwwdddsss\n");
+          break;
+        
+        case 'u':
+          targetVoltage = targetVoltage + 200;
+          printf("new target:%f mv", targetVoltage);
+          break;
+        
+        case 'd':
+          targetVoltage = targetVoltage - 200;
+          printf("new target:%f mv", targetVoltage);
+          break;
+
+        default:
+          break;
+      }
+      
+    }
+    HAL_UART_Receive_IT(&huart1, &r_data, 1);
 }
 /* USER CODE END 4 */
 

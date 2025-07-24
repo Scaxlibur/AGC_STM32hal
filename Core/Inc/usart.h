@@ -36,8 +36,9 @@ extern "C" {
 extern UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN Private defines */
-#define printf(...)  HAL_UART_Transmit(&huart1, (uint8_t *)u_buf, sprintf((char*)u_buf, __VA_ARGS__), 0xffff)
+extern uint8_t r_data[256];
 extern uint8_t u_buf[256];
+#define printf(...)  HAL_UART_Transmit(&huart1, (uint8_t *)u_buf, sprintf((char*)u_buf, __VA_ARGS__), 0xffff)
 
 /* USER CODE END Private defines */
 
