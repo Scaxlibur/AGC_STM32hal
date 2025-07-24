@@ -101,18 +101,22 @@ int main(void)
   HAL_TIM_IC_Start(&htim2, TIM_CHANNEL_1);  // 测周法的输入捕获定时器
 
 	ad7606_init ();
-	AD_RANGE_5V();                                          //设置输入电压最大值
-  ad7606_StartRecord();                           		   //采样率为10K，采样率由TIM4决定,采样率应该是被采样信号的2倍以上
+	AD_RANGE_5V();
+  ad7606_StartRecord();
 
-  DACvalueSet_mv(1000);
+  DACvalueSet_mv(643);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    //ADC1输入，ADC2输出
+
 		HAL_Delay(200);//注意延时不要太久
-		printf("%f,",(10000*(float)((short)g_tAD.usBuf[0])/32768/2));//AD7606的FFT数据处理在tim4中断函数中
+		printf("%f,",(10000*(float)((short)g_tAD.usBuf[0])/32768/2)); // 通道1
+    printf("%f,",(10000*(float)((short)g_tAD.usBuf[1])/32768/2)); // 通道2
+
 
 		// printf("Freq:%dHz\n",1000000 / (HAL_TIM_ReadCapturedValue(&htim3,TIM_CHANNEL_1) + 1)); //预分频出来84-1，即50K
     // printf("%lf\n",(4000000 / (double)(HAL_TIM_ReadCapturedValue(&htim2,TIM_CHANNEL_1) + 1))); // 84MHz分频(21-1)次，标准频率40MHz
@@ -120,7 +124,6 @@ int main(void)
     // printf("%lf\n",(16800000 / (double)(HAL_TIM_ReadCapturedValue(&htim2,TIM_CHANNEL_1) + 1))); // 84MHz分频(5-1)次，标准频率168MHz
     printf("%lf\n",(42000000 / (double)(HAL_TIM_ReadCapturedValue(&htim2,TIM_CHANNEL_1) + 1))); // 84MHz分频(2-1)次，标准频率420MHz
 
-		// printf("%f\n",filter_fft());
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
