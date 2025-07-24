@@ -38,6 +38,12 @@ void AGC_gainControl(float dB)
  */
 void roughGainControl()
 {
+    float input_voltage = INPUT_VOLTAGE; // 获取输入电压
+    roughGainControl_t roughControlMode;
+    if(input_voltage > (SWITCH_LEVEL + SWITCH_BUFFER))
+        roughControlMode = rough_devide4;
+    else if(input_voltage < (SWITCH_LEVEL - SWITCH_BUFFER))
+        roughControlMode = rough_times5;
     switch (roughControlMode)
     {
         default:
@@ -46,6 +52,7 @@ void roughGainControl()
             break;
         case rough_times5:
             HAL_GPIO_WritePin(switch_GPIO_Port, switch_Pin, GPIO_PIN_SET); // 选择乘5
+            break;
     }
 }
 
@@ -54,16 +61,17 @@ void roughGainControl()
  */
 void AGCmove2target(float target)
 {
-    float currentVoltage = INPUT_VOLTAGE;
+    float currentVoltage = OUTPUT_VOLTAGE;
+    roughGainControl();
     if(currentVoltage < target) {
-            dac_value = dac_value + 5;
+            dac_value = dac_value + DAC_STEP;
             if(dac_value > DAC_SAFE_MAX_VALUE) dac_value = DAC_SAFE_MAX_VALUE;
             DACvalueSet_mv(dac_value);
-            HAL_Delay(10);
+            HAL_Delay(1);
     } else if(currentVoltage > target) {
-            dac_value = dac_value - 5;
+            dac_value = dac_value - DAC_STEP;
             if(dac_value < DAC_SAFE_MIN_VALUE) dac_value = DAC_SAFE_MIN_VALUE;
             DACvalueSet_mv(dac_value);
-            HAL_Delay(10);
+            HAL_Delay(1);
     }
 }

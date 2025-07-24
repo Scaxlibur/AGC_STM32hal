@@ -105,6 +105,9 @@ int main(void)
   ad7606_StartRecord();
 
   DACvalueSet_mv(643);
+  printf("\nsetup\n");
+  HAL_Delay(500);
+  HAL_GPIO_WritePin(LED_GREEN_GPIO_Port,LED_GREEN_Pin, GPIO_PIN_SET); // 点亮LED
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -113,12 +116,12 @@ int main(void)
   {
     //ADC1输入，ADC2输出
 
-		HAL_Delay(200);//注意延时不要太久
-		printf("%f,",(10000*(float)((short)g_tAD.usBuf[0])/32768/2)); // 通道1
-    printf("%f,",(10000*(float)((short)g_tAD.usBuf[1])/32768/2)); // 通道2
+		HAL_Delay(2);//注意延时不要太久
+		// printf("%f,",(10000*(float)((short)g_tAD.usBuf[0])/32768/2)); // 通道1
+    // printf("%f,",(10000*(float)((short)g_tAD.usBuf[1])/32768/2)); // 通道2
 
-    printf("%lf,",(42000000 / (double)(HAL_TIM_ReadCapturedValue(&htim2,TIM_CHANNEL_1) + 1))); // 84MHz分频(2-1)次，标准频率420MHz
-    printf("%d\n",dac_value);
+    // printf("%lf,",(42000000 / (double)(HAL_TIM_ReadCapturedValue(&htim2,TIM_CHANNEL_1) + 1))); // 84MHz分频(2-1)次，标准频率420MHz
+    // printf("%d\n",dac_value);
     AGCmove2target(targetVoltage);
     /* USER CODE END WHILE */
 
@@ -183,7 +186,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef  *htim)
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
     if (huart == (&huart1)){
-      switch (r_data[1])
+      switch (r_data)
       {
         case 's':
           printf("wwwdddsss\n");
@@ -191,15 +194,16 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
         
         case 'u':
           targetVoltage = targetVoltage + 200;
-          printf("new target:%f mv", targetVoltage);
+          printf("new target:%f mv\n", targetVoltage);
           break;
         
         case 'd':
           targetVoltage = targetVoltage - 200;
-          printf("new target:%f mv", targetVoltage);
+          printf("new target:%f mv\n", targetVoltage);
           break;
 
         default:
+          printf("?\n");
           break;
       }
       

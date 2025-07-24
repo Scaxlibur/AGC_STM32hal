@@ -21,7 +21,7 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
-uint8_t r_data[256];
+uint8_t r_data;
 uint8_t u_buf[256];
 /* USER CODE END 0 */
 
